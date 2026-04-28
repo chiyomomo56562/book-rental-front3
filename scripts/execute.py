@@ -109,7 +109,7 @@ class StepExecutor:
 
     def _run_git(self, *args) -> subprocess.CompletedProcess:
         cmd = ["git"] + list(args)
-        return subprocess.run(cmd, cwd=self._root, capture_output=True, text=True)
+        return subprocess.run(cmd, cwd=self._root, capture_output=True, text=True, encoding="utf-8", errors="replace")
 
     def _checkout_branch(self):
         branch = self._branch_name
@@ -240,7 +240,7 @@ class StepExecutor:
         result = subprocess.run(
             [gemini_bin, "-p", "--yolo", "--output-format", "json", prompt],
             cwd=self._root, capture_output=True, text=True, timeout=1800,
-            encoding="utf-8"
+            encoding="utf-8", errors="replace"
         )
 
         if result.returncode != 0:
