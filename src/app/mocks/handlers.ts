@@ -92,4 +92,46 @@ export const handlers = [
       { status: 200 }
     );
   }),
+
+  // Rental History
+  http.get('/api/books/:id/rentals', async ({ params }) => {
+    await delay(100);
+    const { id } = params;
+
+    if (id === 'error-id') {
+      return HttpResponse.json(
+        { status: 500, data: null, error: 'Internal Server Error' },
+        { status: 500 }
+      );
+    }
+
+    if (id === 'empty-history-id') {
+      return HttpResponse.json(
+        { status: 200, data: [], error: null },
+        { status: 200 }
+      );
+    }
+
+    return HttpResponse.json(
+      {
+        status: 200,
+        data: [
+          {
+            id: 'rental-2',
+            bookId: id,
+            rentedAt: '2024-04-28T09:00:00Z',
+            returnedAt: null,
+          },
+          {
+            id: 'rental-1',
+            bookId: id,
+            rentedAt: '2024-04-27T10:00:00Z',
+            returnedAt: '2024-04-27T15:00:00Z',
+          },
+        ],
+        error: null,
+      },
+      { status: 200 }
+    );
+  }),
 ];

@@ -37,7 +37,10 @@
     {
       "step": 4,
       "name": "rental-history-feature",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-04-28T16:48:04+0900",
+      "summary": "Implemented rental history feature with TDD, including date formatting (yyyy.MM.dd HH:mm) and status visualization.",
+      "completed_at": "2026-04-28T16:51:00+0900"
     },
     {
       "step": 5,
