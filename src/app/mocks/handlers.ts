@@ -31,4 +31,20 @@ export const handlers = [
       { status: 201 }
     );
   }),
+
+  // Book List
+  http.get('/api/books', async () => {
+    await delay(100);
+    return HttpResponse.json(
+      {
+        status: 200,
+        data: [
+          { id: 'book-1', title: 'Clean Code', status: 'AVAILABLE' },
+          { id: 'book-2', title: 'Refactoring', status: 'RENTED' },
+        ],
+        error: null,
+      },
+      { status: 200 }
+    );
+  }),
 ];

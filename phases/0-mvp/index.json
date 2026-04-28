@@ -21,7 +21,10 @@
     {
       "step": 2,
       "name": "book-list-feature",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-04-28T16:37:18+0900",
+      "summary": "Implemented book list feature with TDD, following api-mapper-hook-component flow and VAC pattern.",
+      "completed_at": "2026-04-28T16:42:30+0900"
     },
     {
       "step": 3,
