@@ -179,11 +179,11 @@ class StepExecutor:
         sections = []
         agent_md = ROOT / "AGENT.md"
         if agent_md.exists():
-            sections.append(f"## 프로젝트 규칙 (AGENT.md)\n\n{agent_md.read_text()}")
+            sections.append(f"## Project Rules (AGENT.md)\n\n{agent_md.read_text(encoding='utf-8')}")
         docs_dir = ROOT / "docs"
         if docs_dir.is_dir():
             for doc in sorted(docs_dir.glob("*.md")):
-                sections.append(f"## {doc.stem}\n\n{doc.read_text()}")
+                sections.append(f"## {doc.stem}\n\n{doc.read_text(encoding='utf-8')}")
         return "\n\n---\n\n".join(sections) if sections else ""
 
     @staticmethod
@@ -195,7 +195,7 @@ class StepExecutor:
         ]
         if not lines:
             return ""
-        return "## 이전 Step 산출물\n\n" + "\n".join(lines) + "\n\n"
+        return "## Previous Step Outputs\n\n" + "\n".join(lines) + "\n\n"
 
     def _build_preamble(self, guardrails: str, step_context: str,
                         prev_error: Optional[str] = None) -> str:
@@ -205,27 +205,27 @@ class StepExecutor:
         retry_section = ""
         if prev_error:
             retry_section = (
-                f"\n## ⚠ 이전 시도 실패 — 아래 에러를 반드시 참고하여 수정하라\n\n"
+                f"\n## ⚠ Previous Attempt Failed — Refer to this error and fix it\n\n"
                 f"{prev_error}\n\n---\n\n"
             )
         return (
-            f"당신은 {self._project} 프로젝트의 개발자입니다. 아래 step을 수행하세요.\n\n"
+            f"You are a developer for the {self._project} project. Perform the step below.\n\n"
             f"{guardrails}\n\n---\n\n"
             f"{step_context}{retry_section}"
-            f"## 작업 규칙\n\n"
-            f"1. 이전 step에서 작성된 코드를 확인하고 일관성을 유지하라.\n"
-            f"2. 이 step에 명시된 작업만 수행하라. 추가 기능이나 파일을 만들지 마라.\n"
-            f"3. 기존 테스트를 깨뜨리지 마라.\n"
-            f"4. AC(Acceptance Criteria) 검증을 직접 실행하라.\n"
-            f"5. /phases/{self._phase_dir_name}/index.json의 해당 step status를 업데이트하라:\n"
-            f"   - AC 통과 → \"completed\" + \"summary\" 필드에 이 step의 산출물을 한 줄로 요약\n"
-            f"   - {self.MAX_RETRIES}회 수정 시도 후에도 실패 → \"error\" + \"error_message\" 기록\n"
-            f"   - 사용자 개입이 필요한 경우 (API 키, 인증, 수동 설정 등) → \"blocked\" + \"blocked_reason\" 기록 후 즉시 중단\n"
-            f"6. 모든 변경사항을 커밋하라:\n"
+            f"## Working Rules\n\n"
+            f"1. Check the code written in previous steps and maintain consistency.\n"
+            f"2. Only perform the tasks specified in this step. Do not create additional features or files.\n"
+            f"3. Do not break existing tests.\n"
+            f"4. Run AC (Acceptance Criteria) verification yourself.\n"
+            f"5. Update the status of the corresponding step in /phases/{self._phase_dir_name}/index.json:\n"
+            f"   - AC Pass → \"completed\" + summarize this step's output in the \"summary\" field in one line\n"
+            f"   - Failed after {self.MAX_RETRIES} attempts → \"error\" + record \"error_message\"\n"
+            f"   - If user intervention is required (API key, auth, manual config, etc.) → \"blocked\" + record \"blocked_reason\" and stop immediately\n"
+            f"6. Commit all changes:\n"
             f"   {commit_example}\n\n---\n\n"
         )
 
-    # --- Gemini 호출 ---
+    # --- Gemini calling ---
 
     def _invoke_gemini(self, step: dict, preamble: str) -> dict:
         step_num, step_name = step["step"], step["name"]
@@ -235,14 +235,15 @@ class StepExecutor:
             print(f"  ERROR: {step_file} not found")
             sys.exit(1)
 
-        prompt = preamble + step_file.read_text()
+        prompt = preamble + step_file.read_text(encoding='utf-8')
+        gemini_bin = "gemini.cmd" if os.name == "nt" else "gemini"
         result = subprocess.run(
-            ["gemini", "-p", "--yolo", "--output-format", "json", prompt],
+            [gemini_bin, "-p", "--yolo", "--output-format", "json", prompt],
             cwd=self._root, capture_output=True, text=True, timeout=1800,
         )
 
         if result.returncode != 0:
-            print(f"\n  WARN: Gemini가 비정상 종료됨 (code {result.returncode})")
+            print(f"\n  WARN: Gemini terminated abnormally (code {result.returncode})")
             if result.stderr:
                 print(f"  stderr: {result.stderr[:500]}")
 
@@ -252,12 +253,12 @@ class StepExecutor:
             "stdout": result.stdout, "stderr": result.stderr,
         }
         out_path = self._phase_dir / f"step{step_num}-output.json"
-        with open(out_path, "w") as f:
+        with open(out_path, "w", encoding='utf-8') as f:
             json.dump(output, f, indent=2, ensure_ascii=False)
 
         return output
 
-    # --- 헤더 & 검증 ---
+    # --- Header & Validation ---
 
     def _print_header(self):
         print(f"\n{'='*60}")
@@ -289,10 +290,10 @@ class StepExecutor:
             index["created_at"] = self._stamp()
             self._write_json(self._index_file, index)
 
-    # --- 실행 루프 ---
+    # --- Execution Loop ---
 
     def _execute_single_step(self, step: dict, guardrails: str) -> bool:
-        """단일 step 실행 (재시도 포함). 완료되면 True, 실패/차단이면 False."""
+        """Execute a single step (including retries). True if completed, False if failed/blocked."""
         step_num, step_name = step["step"], step["name"]
         done = sum(1 for s in self._read_json(self._index_file)["steps"] if s["status"] == "completed")
         prev_error = None
@@ -351,7 +352,7 @@ class StepExecutor:
                 for s in index["steps"]:
                     if s["step"] == step_num:
                         s["status"] = "error"
-                        s["error_message"] = f"[{self.MAX_RETRIES}회 시도 후 실패] {err_msg}"
+                        s["error_message"] = f"[{self.MAX_RETRIES} retry failed] {err_msg}"
                         s["failed_at"] = ts
                 self._write_json(self._index_file, index)
                 self._commit_step(step_num, step_name)
@@ -396,7 +397,7 @@ class StepExecutor:
             branch = self._branch_name
             r = self._run_git("push", "-u", "origin", branch)
             if r.returncode != 0:
-                print(f"\n  ERROR: git push 실패: {r.stderr.strip()}")
+                print(f"\n  ERROR: git push failed: {r.stderr.strip()}")
                 sys.exit(1)
             print(f"  ✓ Pushed to origin/{branch}")
 
