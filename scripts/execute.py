@@ -238,7 +238,8 @@ class StepExecutor:
         prompt = preamble + step_file.read_text(encoding='utf-8')
         gemini_bin = "gemini.cmd" if os.name == "nt" else "gemini"
         result = subprocess.run(
-            [gemini_bin, "-p", "--yolo", "--output-format", "json", prompt],
+            [gemini_bin, "-p", "Execute the following development step:", "--yolo", "--output-format", "json"],
+            input=prompt,
             cwd=self._root, capture_output=True, text=True, timeout=1800,
             encoding="utf-8", errors="replace"
         )
@@ -417,13 +418,8 @@ def main():
     # Determine branch name
     branch = args.branch
     if not branch:
-        # Get default branch from index if possible, otherwise use phase_dir
-        default_branch = f"feat-{args.phase_dir}"
-        try:
-            user_input = input(f"Enter branch name (default: {default_branch}): ").strip()
-            branch = user_input if user_input else default_branch
-        except EOFError:
-            branch = default_branch
+        branch = f"feat-{args.phase_dir}"
+        print(f"  Branch not specified. Using default: {branch}")
 
     StepExecutor(args.phase_dir, branch_name=branch, auto_push=args.push).run()
 
