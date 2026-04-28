@@ -32,7 +32,7 @@
       "status": "completed",
       "started_at": "2026-04-28T16:43:07+0900",
       "summary": "Implemented book detail feature with TDD, supporting rental/return actions and automated cache invalidation.",
-      "completed_at": "2026-04-28T16:48:30+0900"
+      "completed_at": "2026-04-28T16:48:03+0900"
     },
     {
       "step": 4,
