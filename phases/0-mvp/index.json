@@ -2,12 +2,62 @@
   "project": "book-rental-front3",
   "phase": "0-mvp",
   "steps": [
-    { "step": 0, "name": "shared-infrastructure", "status": "pending" },
-    { "step": 1, "name": "book-registration-feature", "status": "pending" },
-    { "step": 2, "name": "book-list-feature", "status": "pending" },
-    { "step": 3, "name": "book-detail-feature", "status": "pending" },
-    { "step": 4, "name": "rental-history-feature", "status": "pending" },
-    { "step": 5, "name": "book-management-feature", "status": "pending" },
-    { "step": 6, "name": "page-composition-routing", "status": "pending" }
-  ]
+    {
+      "step": 0,
+      "name": "shared-infrastructure",
+      "status": "completed",
+      "started_at": "2026-04-28T16:29:07+0900",
+      "summary": "Established shared infrastructure: Axios instance, MSW setup, basic UI components (Button, Input, Card, Badge), and DefaultLayout with TDD verification.",
+      "completed_at": "2026-04-28T16:33:24+0900"
+    },
+    {
+      "step": 1,
+      "name": "book-registration-feature",
+      "status": "completed",
+      "started_at": "2026-04-28T16:33:25+0900",
+      "summary": "Implemented book registration feature with TDD, including API, mapper, hooks, and VAC pattern components.",
+      "completed_at": "2026-04-28T16:37:17+0900"
+    },
+    {
+      "step": 2,
+      "name": "book-list-feature",
+      "status": "completed",
+      "started_at": "2026-04-28T16:37:18+0900",
+      "summary": "Implemented book list feature with TDD, following api-mapper-hook-component flow and VAC pattern.",
+      "completed_at": "2026-04-28T16:43:06+0900"
+    },
+    {
+      "step": 3,
+      "name": "book-detail-feature",
+      "status": "completed",
+      "started_at": "2026-04-28T16:43:07+0900",
+      "summary": "Implemented book detail feature with TDD, supporting rental/return actions and automated cache invalidation.",
+      "completed_at": "2026-04-28T16:48:03+0900"
+    },
+    {
+      "step": 4,
+      "name": "rental-history-feature",
+      "status": "completed",
+      "started_at": "2026-04-28T16:48:04+0900",
+      "summary": "Implemented rental history feature with TDD, including date formatting (yyyy.MM.dd HH:mm) and status visualization.",
+      "completed_at": "2026-04-28T16:51:21+0900"
+    },
+    {
+      "step": 5,
+      "name": "book-management-feature",
+      "status": "completed",
+      "started_at": "2026-04-28T16:51:21+0900",
+      "summary": "Implemented book management feature (rename/delete) with TDD, including confirmation logic and MSW mocking.",
+      "completed_at": "2026-04-28T16:55:50+0900"
+    },
+    {
+      "step": 6,
+      "name": "page-composition-routing",
+      "status": "completed",
+      "summary": "Implemented page components (List, Detail, Registration), configured React Router with routes (/, /books/new, /books/:id), and integrated features with shared layout.",
+      "completed_at": "2026-04-28T16:59:05+0900"
+    }
+  ],
+  "created_at": "2026-04-28T16:16:13+0900",
+  "completed_at": "2026-04-28T16:59:05+0900"
 }
