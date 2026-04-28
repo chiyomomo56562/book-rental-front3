@@ -47,4 +47,49 @@ export const handlers = [
       { status: 200 }
     );
   }),
+
+  // Book Detail
+  http.get('/api/books/:id', async ({ params }) => {
+    await delay(100);
+    const { id } = params;
+    
+    if (id === 'error-id') {
+      return HttpResponse.json(
+        { status: 500, data: null, error: 'Internal Server Error' },
+        { status: 500 }
+      );
+    }
+
+    const status = id === 'book-2' ? 'RENTED' : 'AVAILABLE';
+    return HttpResponse.json(
+      {
+        status: 200,
+        data: {
+          id,
+          title: id === 'book-1' ? 'Clean Code' : 'Refactoring',
+          status,
+        },
+        error: null,
+      },
+      { status: 200 }
+    );
+  }),
+
+  // Rental Book
+  http.post('/api/books/:id/rentals', async () => {
+    await delay(100);
+    return HttpResponse.json(
+      { status: 200, data: true, error: null },
+      { status: 200 }
+    );
+  }),
+
+  // Return Book
+  http.patch('/api/books/:id/rentals/return', async () => {
+    await delay(100);
+    return HttpResponse.json(
+      { status: 200, data: true, error: null },
+      { status: 200 }
+    );
+  }),
 ];
