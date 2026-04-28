@@ -7,7 +7,8 @@
       "name": "shared-infrastructure",
       "status": "completed",
       "started_at": "2026-04-28T16:29:07+0900",
-      "summary": "Established shared infrastructure: Axios instance, MSW setup, basic UI components (Button, Input, Card, Badge), and DefaultLayout with TDD verification."
+      "summary": "Established shared infrastructure: Axios instance, MSW setup, basic UI components (Button, Input, Card, Badge), and DefaultLayout with TDD verification.",
+      "completed_at": "2026-04-28T16:33:24+0900"
     },
     {
       "step": 1,
