@@ -1,0 +1,13 @@
+{
+  "project": "book-rental-front3",
+  "phase": "0-mvp",
+  "steps": [
+    { "step": 0, "name": "shared-infrastructure", "status": "pending" },
+    { "step": 1, "name": "book-registration-feature", "status": "pending" },
+    { "step": 2, "name": "book-list-feature", "status": "pending" },
+    { "step": 3, "name": "book-detail-feature", "status": "pending" },
+    { "step": 4, "name": "rental-history-feature", "status": "pending" },
+    { "step": 5, "name": "book-management-feature", "status": "pending" },
+    { "step": 6, "name": "page-composition-routing", "status": "pending" }
+  ]
+}
