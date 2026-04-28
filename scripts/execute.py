@@ -240,6 +240,7 @@ class StepExecutor:
         result = subprocess.run(
             [gemini_bin, "-p", "--yolo", "--output-format", "json", prompt],
             cwd=self._root, capture_output=True, text=True, timeout=1800,
+            encoding="utf-8"
         )
 
         if result.returncode != 0:
