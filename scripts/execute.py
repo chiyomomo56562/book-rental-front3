@@ -418,8 +418,13 @@ def main():
     # Determine branch name
     branch = args.branch
     if not branch:
-        branch = f"feat-{args.phase_dir}"
-        print(f"  Branch not specified. Using default: {branch}")
+        # Get default branch from index if possible, otherwise use phase_dir
+        default_branch = f"feat-{args.phase_dir}"
+        try:
+            user_input = input(f"Enter branch name (default: {default_branch}): ").strip()
+            branch = user_input if user_input else default_branch
+        except EOFError:
+            branch = default_branch
 
     StepExecutor(args.phase_dir, branch_name=branch, auto_push=args.push).run()
 
