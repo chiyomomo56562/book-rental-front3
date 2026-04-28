@@ -134,4 +134,40 @@ export const handlers = [
       { status: 200 }
     );
   }),
+
+  // Rename Book Title
+  http.patch('/api/books/:id/title', async ({ request }) => {
+    await delay(100);
+    const { title } = (await request.json()) as { title: string };
+
+    if (!title) {
+      return HttpResponse.json(
+        { status: 400, data: null, error: 'Title is required' },
+        { status: 400 }
+      );
+    }
+
+    return HttpResponse.json(
+      { status: 200, data: true, error: null },
+      { status: 200 }
+    );
+  }),
+
+  // Remove Book
+  http.delete('/api/books/:id', async ({ params }) => {
+    await delay(100);
+    const { id } = params;
+
+    if (id === 'rented-book-id') {
+      return HttpResponse.json(
+        { status: 400, data: null, error: 'Cannot delete rented book' },
+        { status: 400 }
+      );
+    }
+
+    return HttpResponse.json(
+      { status: 200, data: true, error: null },
+      { status: 200 }
+    );
+  }),
 ];

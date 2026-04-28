@@ -45,7 +45,10 @@
     {
       "step": 5,
       "name": "book-management-feature",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-04-28T16:51:21+0900",
+      "summary": "Implemented book management feature (rename/delete) with TDD, including confirmation logic and MSW mocking.",
+      "completed_at": "2026-04-28T16:55:00+0900"
     },
     {
       "step": 6,
